@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Time Vault: Memory Archive</title>
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css" />
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <div id="fixed-background">
+        <div id="wheel-track-container">
+            <div id="left-track" class="track"></div>
+            <div id="right-track" class="track"></div>
+            <h2 id="travel-text">Engaging Time Circuits...</h2>
+        </div>
+    </div>
+
+    <div id="main-wrapper">
+        
+        <section id="intro-section" class="content-section">
+            <div class="content-center">
+                <h1 class="main-title">Time Vault</h1>
+                <p class="subtitle">A journey back to your cherished memories.</p>
+                <div id="dashboard-container" onclick="startTravel()">
+                    <div class="time-panel-group">
+                        <div class="time-label dest-text">DESTINATION TIME</div>
+                        <div class="time-display-row dest-time-row"><span class="time-unit">APR 14</span><span class="time-unit">2000</span><span class="time-unit">12:00 AM</span></div>
+                    </div>
+                    <div class="time-panel-group">
+                        <div class="time-label pres-text">PRESENT TIME</div>
+                        <div class="time-display-row pres-time-row"><span class="time-unit" id="present-time-display">00 00 0000 00:00:00 AM</span></div>
+                    </div>
+                    <div class="time-panel-group">
+                        <div class="time-label last-text">LAST TIME DEPARTED</div>
+                        <div class="time-display-row last-time-row"><span class="time-unit" style="letter-spacing: 5px;">BAE JUNIL</span></div>
+                    </div>
+                    <p id="click-prompt">CLICK TO START</p>
+                </div>
+            </div>
+            <div id="start-light"></div>
+        </section>
+
+        <section id="time-travel-track-section"></section>
+
+        <section id="horizontal-scroll-wrapper">
+            <div id="sticky-container">
+                <div id="horizontal-track">
+                    
+                    <div class="h-slide">
+                        <div class="memory-stage">
+                            <div class="memory-object tilt-card memory-photo memory-photo-2"></div>
+                            <div class="memory-object tilt-card memory-obj"><canvas id="canvas-birch" class="obj-content"></canvas></div>
+                        </div>
+                        <div class="section-heading"><h2>Memory of Path: Hokkaido</h2></div>
+                    </div>
+
+                    <div class="h-slide">
+                        <div class="memory-stage">
+                            <div class="memory-object tilt-card memory-photo memory-photo-3"></div>
+                            <div class="memory-object tilt-card memory-obj"><canvas id="canvas-field" class="obj-content"></canvas></div>
+                        </div>
+                        <div class="section-heading"><h2>Memory of Growth: Green Field</h2></div>
+                    </div>
+
+                    <div class="h-slide">
+                        <div class="memory-stage">
+                            <div class="memory-object tilt-card memory-photo memory-photo-5"></div>
+                            <div class="memory-object tilt-card memory-obj"><canvas id="canvas-snow" class="obj-content"></canvas></div>
+                        </div>
+                        <div class="section-heading"><h2>Memory of Silence: Snowy Mountain</h2></div>
+                    </div>
+
+                    <div class="h-slide">
+                        <div class="memory-stage">
+                            <div class="memory-object tilt-card memory-photo memory-photo-6"></div>
+                            <div class="memory-object tilt-card memory-obj"><canvas id="canvas-signal" class="obj-content"></canvas></div>
+                        </div>
+                        <div class="section-heading"><h2>Memory of City: Osaka</h2></div>
+                    </div>
+
+                    <div class="h-slide">
+                        <div class="memory-stage">
+                            <div class="memory-object tilt-card memory-photo memory-photo-8"></div>
+                            <div class="memory-object tilt-card memory-obj"><canvas id="canvas-flowers" class="obj-content"></canvas></div>
+                        </div>
+                        <div class="section-heading"><h2>Memory of Radiance: Red Flowers</h2></div>
+                    </div>
+
+                </div>
+            </div>
+        </section>
+
+        <section id="outro-section" class="content-section">
+            <div class="content-center">
+                <div class="section-heading">
+                    <h2>My Nostalgic Playlist</h2>
+                    <p style="color: #FFD700; margin-bottom: 40px; font-size: 0.9em;">Click a spine to open the Mosaic Art Canvas.</p>
+                </div>
+                
+                <div class="album-shelf">
+                    <div class="album-spine" data-img="img/album_1.jpg" data-title="City Pop - 1985 Collection">
+                        <canvas id="spine-1" class="spine-canvas"></canvas>
+                    </div>
+                    <div class="album-spine" data-img="img/album_2.jpg" data-title="Jazz Night - Blue Note">
+                        <canvas id="spine-2" class="spine-canvas"></canvas>
+                    </div>
+                    <div class="album-spine" data-img="img/album_3.png" data-title="Retro Soul - Vinyl Classics">
+                        <canvas id="spine-3" class="spine-canvas"></canvas>
+                    </div>
+                    <div class="album-spine" data-img="img/album_4.png" data-title="Hump Back - Teenager">
+                        <canvas id="spine-4" class="spine-canvas"></canvas>
+                    </div>
+                </div>
+
+                <p style="color: #666; margin-top: 60px; font-size: 0.8em; letter-spacing: 2px;">THE JOURNEY HAS ENDED</p>
+            </div>
+        </section>
+
+    </div>
+
+    <div id="mosaic-modal" class="modal">
+        <span class="close-modal">&times;</span>
+        <div id="modal-canvas-wrapper"></div>
+        <div id="modal-caption"></div>
+        <p style="color: #888; font-size: 0.8em; margin-top: 10px;">Move your mouse to reveal Pop Art colors.</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

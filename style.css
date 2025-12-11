@@ -1,0 +1,201 @@
+﻿/* --- 1. Basic Style --- */
+body {
+    margin: 0; padding: 0;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    background-color: #1A1A1A;
+    color: #F5F5F5;
+    overflow-x: hidden; /* Hide horizontal scrollbar */
+}
+
+/* --- 2. Sections Layout --- */
+.content-section {
+    min-height: 100vh;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    position: relative; z-index: 10;
+}
+.content-center {
+    width: 100%; height: 100%;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+}
+
+/* Intro Background */
+#intro-section { background: #1A1A1A; }
+
+/* Track Scroll Area (Vertical Space for Draw-on Animation) */
+#time-travel-track-section {
+    height: 150vh; /* Enough space to scroll down while tracks draw */
+    background: transparent;
+    position: relative; z-index: 5;
+}
+
+/* Horizontal Scroll Wrapper (Sticky) */
+#horizontal-scroll-wrapper {
+    height: 500vh; /* 5 slides * 100vh distance */
+    position: relative; z-index: 10;
+}
+
+#sticky-container {
+    position: sticky; top: 0;
+    width: 100%; height: 100vh;
+    overflow: hidden;
+    display: flex; align-items: center;
+    /* Semi-transparent background to cover tracks below */
+    background: radial-gradient(circle at 50% 50%, rgba(30,30,30,0.95), rgba(26,26,26,1));
+}
+
+#horizontal-track {
+    display: flex;
+    width: 500vw; /* 5 slides width */
+    height: 100%;
+    will-change: transform;
+}
+
+.h-slide {
+    width: 100vw; height: 100vh;
+    flex-shrink: 0;
+    display: flex; flex-direction: column;
+    justify-content: center; align-items: center;
+}
+
+/* Outro */
+#outro-section { background: #1A1A1A; min-height: 100vh; }
+
+
+/* --- 3. Fixed Background (Tracks) --- */
+#fixed-background {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none; z-index: 0;
+}
+#wheel-track-container {
+    width: 100%; height: 100%;
+    display: flex; justify-content: center;
+    opacity: 0; transition: opacity 1s;
+}
+#wheel-track-container.visible { opacity: 1; }
+
+.track {
+    position: absolute; width: 40px; height: 150vh; top: -10vh;
+    background: #B83A2D;
+    box-shadow: 0 0 40px 10px rgba(255, 150, 0, 0.8), 0 0 5px rgba(255, 255, 0, 0.5) inset;
+    clip-path: polygon(0 100%, 100% 100%, 100% 100%, 0 100%);
+    opacity: 1; transition: clip-path 4s ease-out, opacity 0.5s;
+}
+#left-track { left: 68%; transform: rotate(15deg); }
+#right-track { left: 30%; transform: rotate(-15deg); }
+
+@keyframes flow-gradient {
+    from { background-position: 0 0; }
+    to { background-position: 0 -300%; }
+}
+.track.burning {
+    background: linear-gradient(to top, #4169E1, #ffffff, #ffd700, #ff8c00, #ff4500, #4169E1);
+    background-size: 100% 300%; 
+    animation: flow-gradient 3s linear infinite;
+    clip-path: polygon(0 0, 100% 0, 100% 100%, 0 100%) !important;
+}
+
+#travel-text {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-size: 2.5em; color: #FFD700; opacity: 0; transition: opacity 0.5s;
+    width: 100%; text-align: center; font-weight: 700;
+}
+
+
+/* --- 4. UI Elements --- */
+.main-title { font-size: 4em; color: #DCC9A9; font-weight: 800; }
+.subtitle { font-size: 1.2em; color: #B83A2D; font-weight: 300; }
+
+#dashboard-container {
+    background-color: #404040; border: 5px solid #202020;
+    padding: 30px 20px; border-radius: 15px; margin: 40px auto;
+    width: 80%; max-width: 700px;
+    box-shadow: 0 0 15px rgba(0, 0, 0, 0.5);
+    cursor: pointer; z-index: 20; position: relative;
+}
+.time-display-row { background-color: #202020; padding: 10px; border-radius: 5px; display: flex; justify-content: space-around; }
+.time-unit { font-size: 2.2em; text-shadow: 0 0 8px rgba(255,255,255,0.4); padding: 0 5px; font-weight: 700; }
+.dest-text { color: #B83A2D; } .pres-text { color: #4E6851; } .last-text { color: #DCC9A9; }
+
+#start-light {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 0; height: 0; background-color: #FFD700; border-radius: 50%; opacity: 0; z-index: 5;
+    transition: width 1s, height 1s, opacity 1s; pointer-events: none;
+}
+.travel-active #start-light { width: 200vw; height: 200vh; opacity: 0.3; }
+
+.section-heading { text-align: center; color: #FFD700; margin-top: 30px; }
+.section-heading h2 { margin: 0; font-size: 1.8em; letter-spacing: 2px; font-weight: 600; }
+
+/* --- 5. Memory Objects --- */
+.memory-stage {
+    display: flex; flex-direction: row; align-items: center; justify-content: center;
+    gap: 40px; width: 90%; max-width: 1300px;
+    perspective: 900px;
+}
+.memory-object {
+    background: linear-gradient(135deg, #2b2b2b, #3c3c3c);
+    border: none; border-radius: 14px;
+    box-shadow: 0 20px 35px rgba(0,0,0,0.35);
+    display: flex; align-items: center; justify-content: center;
+    transform: translateY(0); transition: transform 0.3s, box-shadow 0.3s;
+    overflow: hidden;
+}
+.memory-object.active {
+    box-shadow: 0 0 40px rgba(255, 215, 0, 0.6), 0 20px 35px rgba(0,0,0,0.35);
+    transform: scale(1.02); 
+}
+.memory-stage .memory-photo { width: 55%; height: 550px; background-size: cover; background-position: center center; }
+.memory-stage .memory-obj { width: 40%; height: 550px; background: #222; position: relative; cursor: pointer; }
+.obj-content { width: 100%; height: 100%; display: block; }
+
+.memory-photo-2 { background-image: url('img/3.jpg'); } 
+.memory-photo-3 { background-image: url('img/2.jpg'); } 
+.memory-photo-5 { background-image: url('img/4.jpg'); } 
+.memory-photo-6 { background-image: url('img/1.jpg'); } 
+.memory-photo-8 { background-image: url('img/8.jpg'); } 
+
+/* --- 6. Album Shelf --- */
+.album-shelf {
+    display: flex; justify-content: center; align-items: flex-end;
+    gap: 20px; height: 400px; margin-top: 20px;
+}
+.album-spine {
+    width: 60px; height: 350px;
+    background: #000; border-radius: 4px; overflow: hidden;
+    position: relative; cursor: pointer;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.6);
+    transition: transform 0.3s, height 0.3s, width 0.3s;
+    opacity: 0; transform: translateY(100px);
+}
+.album-spine.visible { opacity: 1; transform: translateY(0); }
+.album-spine:hover { height: 380px; transform: translateY(-15px); width: 70px; z-index: 10; }
+.spine-canvas { width: 100%; height: 100%; object-fit: cover; }
+
+/* --- 7. Modal --- */
+.modal {
+    display: none; position: fixed; z-index: 100;
+    left: 0; top: 0; width: 100%; height: 100%;
+    background-color: rgba(0,0,0,0.95);
+    justify-content: center; align-items: center; flex-direction: column;
+}
+#modal-canvas-wrapper {
+    box-shadow: 0 0 50px rgba(255,255,255,0.1);
+    border-radius: 8px; overflow: hidden;
+    animation: zoomIn 0.4s cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+.pop-art-canvas { cursor: crosshair; }
+@keyframes zoomIn { from {transform:translateY(50px); opacity:0;} to {transform:translateY(0); opacity:1;} }
+#modal-caption { margin-top: 20px; color: #ccc; font-size: 1.5em; text-align: center; }
+.close-modal {
+    position: absolute; top: 30px; right: 50px;
+    color: #f1f1f1; font-size: 50px; font-weight: bold;
+    cursor: pointer; transition: 0.3s;
+}
+.close-modal:hover { color: #bbb; transform: rotate(90deg); }
+
+@media (max-width: 900px) {
+    .memory-stage { flex-direction: column; }
+    .memory-stage .memory-photo, .memory-stage .memory-obj { width: 90%; height: 350px; }
+    .album-shelf { gap: 10px; } .album-spine { width: 40px; }
+}
