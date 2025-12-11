@@ -1,19 +1,17 @@
 document.addEventListener('DOMContentLoaded', () => {
+    // --- Slider Variables ---
+    const mainContainer = document.getElementById('main-container');
+    const horizontalTrack = document.getElementById('horizontal-track');
+    let pageIndex = 0; let slideIndex = 0; const maxSlides = 5; 
+    let isAnimating = false; let travelStarted = false;
+
     // --- UI Variables ---
-    const introSection = document.getElementById('intro-section');
+    const introSection = document.getElementById('page-intro');
     const startLight = document.getElementById('start-light');
     const trackContainer = document.getElementById('wheel-track-container');
     const tracks = document.querySelectorAll('.track');
     const travelText = document.getElementById('travel-text');
-    const dashboardContainer = document.getElementById('dashboard-container');
-    const clickPrompt = document.getElementById('click-prompt');
     const presentTimeDisplay = document.getElementById('present-time-display');
-    
-    // --- Scroll Variables ---
-    const horizontalWrapper = document.getElementById('horizontal-scroll-wrapper');
-    const horizontalTrack = document.getElementById('horizontal-track');
-    
-    let travelStarted = false;
     const monthNames = ['JAN', 'FEB', 'MAR', 'APR', 'MAY', 'JUN', 'JUL', 'AUG', 'SEP', 'OCT', 'NOV', 'DEC'];
 
     // 1. Clock
@@ -24,7 +22,7 @@ document.addEventListener('DOMContentLoaded', () => {
     }
     setInterval(updateTime, 1000); updateTime();
 
-    // 2. Start Travel (Draw-on + Auto Scroll)
+    // 2. Start Travel
     window.startTravel = function() {
         if (travelStarted) return;
         travelStarted = true;
@@ -32,65 +30,67 @@ document.addEventListener('DOMContentLoaded', () => {
         introSection.classList.add('travel-active');
         startLight.style.width = '200vw'; startLight.style.height = '200vh';
         
-        // Track Animation
         trackContainer.classList.add('visible');
         tracks.forEach(t => t.classList.add('burning'));
-        
         travelText.style.opacity = 1;
-        clickPrompt.textContent = "SCROLL DOWN";
+        document.getElementById('click-prompt').textContent = "SCROLL DOWN";
         
         setTimeout(() => { travelText.style.opacity = 0; }, 2500);
 
-        // [AUTO SCROLL] Smoothly scroll to Horizontal Section start
+        // Auto Scroll to Horizontal Section
         setTimeout(() => {
-            const targetY = horizontalWrapper.offsetTop; // 가로 섹션 시작 위치
-            smoothScrollTo(targetY, 2000); // 2초 동안 이동
-        }, 500);
+            const targetY = document.getElementById('horizontal-scroll-wrapper').offsetTop;
+            // Simulated smooth scroll for visual
+            // In this specific hybrid setup, we directly use moveToPage to sync state
+            moveToPage(1); 
+        }, 2000);
     };
 
-    function smoothScrollTo(targetY, duration) {
-        const startY = window.scrollY;
-        const distance = targetY - startY;
-        let startTime = null;
+    // 3. Navigation Logic
+    function updateView() {
+        mainContainer.style.transform = `translateY(-${pageIndex * 100}vh)`;
+        horizontalTrack.style.transform = `translateX(-${slideIndex * 100}vw)`;
+        
+        // Background Tracks logic
+        if(pageIndex >= 1 && pageIndex <= 2) trackContainer.classList.add('visible');
+        else trackContainer.classList.remove('visible');
 
-        function animation(currentTime) {
-            if (startTime === null) startTime = currentTime;
-            const timeElapsed = currentTime - startTime;
-            const progress = Math.min(timeElapsed / duration, 1);
-            const ease = 0.5 * (1 - Math.cos(Math.PI * progress)); // Ease-in-out
-            window.scrollTo(0, startY + distance * ease);
-            if (timeElapsed < duration) requestAnimationFrame(animation);
-        }
-        requestAnimationFrame(animation);
+        if(pageIndex === 3) triggerAlbumReveal();
     }
 
-    // 3. Scroll Handler (Horizontal Mapping)
-    window.addEventListener('scroll', () => {
-        const scrollTop = window.scrollY;
-        
-        // Intro Fade
-        if (scrollTop < window.innerHeight) {
-            dashboardContainer.style.opacity = Math.max(0, 1 - (scrollTop / (window.innerHeight * 0.8)));
-        }
+    function moveToPage(idx) {
+        if(isAnimating) return;
+        isAnimating = true; pageIndex = idx; updateView();
+        setTimeout(() => { isAnimating = false; }, 1000);
+    }
+    function moveToSlide(idx) {
+        if(isAnimating) return;
+        isAnimating = true; slideIndex = idx; updateView();
+        setTimeout(() => { isAnimating = false; }, 1000);
+    }
 
-        // Horizontal Scroll Logic
-        const hTop = horizontalWrapper.offsetTop;
-        const hHeight = horizontalWrapper.offsetHeight;
-        const vHeight = window.innerHeight;
+    // 4. Wheel Event
+    window.addEventListener('wheel', (e) => {
+        if (!travelStarted || isAnimating) return;
+        const dir = e.deltaY > 0 ? 1 : -1;
 
-        // Sticky Area Logic: Vertical Scroll -> Horizontal Transform
-        if (scrollTop >= hTop && scrollTop <= (hTop + hHeight - vHeight)) {
-            const progress = (scrollTop - hTop) / (hHeight - vHeight);
-            const moveX = progress * (horizontalTrack.scrollWidth - window.innerWidth);
-            horizontalTrack.style.transform = `translateX(-${moveX}px)`;
+        if (pageIndex === 0) { if (dir === 1) moveToPage(1); } 
+        else if (pageIndex === 1) { 
+            // Track View -> Horizontal OR Back to Intro
+            if (dir === 1) moveToPage(2); else moveToPage(0);
         }
-
-        // Outro Album Reveal
-        const outroTop = document.getElementById('outro-section').offsetTop;
-        if (scrollTop > outroTop - vHeight/1.5) {
-            triggerAlbumReveal();
-        }
-    });
+        else if (pageIndex === 2) {
+            // Horizontal Section
+            if (dir === 1) {
+                if (slideIndex < maxSlides - 1) moveToSlide(slideIndex + 1);
+                else moveToPage(3); // To Outro
+            } else {
+                if (slideIndex > 0) moveToSlide(slideIndex - 1);
+                else moveToPage(1); // Back to Track View
+            }
+        } 
+        else if (pageIndex === 3) { if (dir === -1) moveToPage(2); } 
+    }, { passive: false });
 
 
     // =================================================================
@@ -193,7 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         } draw();
     }
 
-    // 5. Flowers (Red) - Full Mandala
+    // 5. Flowers (Red)
     function initFlowerCanvas() {
         const canvas = document.getElementById('canvas-flowers'); if(!canvas) return;
         const ctx = canvas.getContext('2d'); const container = canvas.parentElement;
@@ -276,7 +276,7 @@ document.addEventListener('DOMContentLoaded', () => {
                         x: x, y: y,
                         baseColor: `rgb(${r},${g},${b})`,
                         color: `rgb(${r},${g},${b})`, 
-                        popColor: `rgb(${g}, ${b}, ${r})`, 
+                        popColor: `rgb(${g}, ${b}, ${r})`, // Consistent Pop
                         isPopped: false
                     });
                 }
@@ -298,14 +298,10 @@ document.addEventListener('DOMContentLoaded', () => {
                 const mx = e.clientX - rect.left;
                 const my = e.clientY - rect.top;
                 let redraw = false;
-                
-                // Spread Effect
                 const radius = 40; 
                 this.tiles.forEach(t => {
-                    const tx = t.x + this.tileSize/2;
-                    const ty = t.y + this.tileSize/2;
+                    const tx = t.x + this.tileSize/2; const ty = t.y + this.tileSize/2;
                     const dist = Math.sqrt((mx-tx)**2 + (my-ty)**2);
-                    
                     if (dist < radius) {
                         if (!t.isPopped) {
                             t.isPopped = true;

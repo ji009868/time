@@ -1,56 +1,39 @@
 ﻿/* --- 1. Basic Style --- */
 body {
     margin: 0; padding: 0;
-    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
     background-color: #1A1A1A;
     color: #F5F5F5;
-    overflow-x: hidden; /* Hide horizontal scrollbar */
+    overflow: hidden; 
+    height: 100vh; width: 100vw;
 }
 
-/* --- 2. Sections Layout --- */
-.content-section {
-    min-height: 100vh;
-    display: flex; flex-direction: column; align-items: center; justify-content: center;
-    position: relative; z-index: 10;
+/* --- 2. Main Container --- */
+#main-container {
+    width: 100vw; height: 100vh;
+    transition: transform 1s cubic-bezier(0.2, 0.8, 0.2, 1);
 }
+.page-section {
+    width: 100vw; height: 100vh;
+    position: relative; overflow: hidden;
+}
+#track-scroll-dummy { height: 100vh; background: transparent; }
+
 .content-center {
     width: 100%; height: 100%;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
 }
 
-/* Intro Background */
-#intro-section { background: #1A1A1A; }
-
-/* Track Scroll Area (Vertical Space for Draw-on Animation) */
-#time-travel-track-section {
-    height: 150vh; /* Enough space to scroll down while tracks draw */
-    background: transparent;
-    position: relative; z-index: 5;
-}
-
-/* Horizontal Scroll Wrapper (Sticky) */
-#horizontal-scroll-wrapper {
-    height: 500vh; /* 5 slides * 100vh distance */
-    position: relative; z-index: 10;
-}
-
-#sticky-container {
-    position: sticky; top: 0;
-    width: 100%; height: 100vh;
-    overflow: hidden;
-    display: flex; align-items: center;
-    /* Semi-transparent background to cover tracks below */
-    background: radial-gradient(circle at 50% 50%, rgba(30,30,30,0.95), rgba(26,26,26,1));
-}
-
+/* --- 3. Horizontal Slider Track --- */
 #horizontal-track {
     display: flex;
-    width: 500vw; /* 5 slides width */
+    width: 500vw; /* 5 slides */
     height: 100%;
+    transition: transform 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
     will-change: transform;
+    background: radial-gradient(circle at 50% 50%, rgba(30,30,30,0.1), rgba(26,26,26,1));
 }
-
 .h-slide {
     width: 100vw; height: 100vh;
     flex-shrink: 0;
@@ -58,11 +41,7 @@ body {
     justify-content: center; align-items: center;
 }
 
-/* Outro */
-#outro-section { background: #1A1A1A; min-height: 100vh; }
-
-
-/* --- 3. Fixed Background (Tracks) --- */
+/* --- 4. Fixed Background (Tracks) --- */
 #fixed-background {
     position: fixed; top: 0; left: 0; width: 100%; height: 100%;
     pointer-events: none; z-index: 0;
@@ -101,8 +80,7 @@ body {
     width: 100%; text-align: center; font-weight: 700;
 }
 
-
-/* --- 4. UI Elements --- */
+/* --- 5. UI Elements --- */
 .main-title { font-size: 4em; color: #DCC9A9; font-weight: 800; }
 .subtitle { font-size: 1.2em; color: #B83A2D; font-weight: 300; }
 
@@ -127,7 +105,7 @@ body {
 .section-heading { text-align: center; color: #FFD700; margin-top: 30px; }
 .section-heading h2 { margin: 0; font-size: 1.8em; letter-spacing: 2px; font-weight: 600; }
 
-/* --- 5. Memory Objects --- */
+/* Memory Stage */
 .memory-stage {
     display: flex; flex-direction: row; align-items: center; justify-content: center;
     gap: 40px; width: 90%; max-width: 1300px;
@@ -186,7 +164,7 @@ body {
 }
 .pop-art-canvas { cursor: crosshair; }
 @keyframes zoomIn { from {transform:translateY(50px); opacity:0;} to {transform:translateY(0); opacity:1;} }
-#modal-caption { margin-top: 20px; color: #ccc; font-size: 1.5em; text-align: center; }
+#modal-caption { margin-top: 20px; color: #ccc; font-size: 1.5em; text-align: center; font-family: monospace; }
 .close-modal {
     position: absolute; top: 30px; right: 50px;
     color: #f1f1f1; font-size: 50px; font-weight: bold;
